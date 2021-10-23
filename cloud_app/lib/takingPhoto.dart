@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 import 'dart:io';
+import 'Utility.dart';
+import 'DBHelper.dart';
+import 'Photo.dart';
 
 class TakingPhoto extends StatefulWidget {
   @override
@@ -13,6 +16,29 @@ class TakingPhoto extends StatefulWidget {
 class _TakingPhoto extends State<TakingPhoto> {
   File? _image;
   final picker = ImagePicker();
+  DBHelper? dbHelper;
+  List<Photo>? images;
+
+  @override
+  void initState() {
+    super.initState();
+    images = [];
+    dbHelper = DBHelper();
+    refreshImages();
+  }
+
+  refreshImages() {
+    dbHelper!.getPhotos().then((imgs) {
+      setState(() {
+        images!.clear();
+        images!.addAll(imgs);
+      });
+    });
+  }
+
+  _deleteDataInDB() {
+    dbHelper!.deleteDataInDB();
+  }
 
   Future getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
@@ -32,6 +58,12 @@ class _TakingPhoto extends State<TakingPhoto> {
         _image = File(pickedFile.path);
       }
     });
+  }
+
+  void saveImg(imgFile) async {
+    String imgString = Utility.base64String(await imgFile.readAsBytes());
+    Photo photo = Photo(0, imgString);
+    dbHelper!.save(photo);
   }
 
   @override
@@ -81,6 +113,7 @@ class _TakingPhoto extends State<TakingPhoto> {
                       label: const Text('結果を見る'),
                       icon: const Icon(Icons.cloud),
                       onPressed: () => {
+                        saveImg(_image),
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
                           return Result(_image);

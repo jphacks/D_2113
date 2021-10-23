@@ -32,6 +32,14 @@ dependencies:
 
   # using camera ang getting photo in library
   image_picker: ^0.8.4+3
+  # To save photo in local storage
+  path_provider: ^2.0.5
+  # To restore data temporarily
+  shared_preferences: ^2.0.8
+  # get below "." like .jpg
+  path: ^1.8.0
+  # using local database
+  sqflite: ^2.0.0+4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
