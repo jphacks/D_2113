@@ -1,3 +1,5 @@
+import 'package:cloud_app/collection.dart';
+import 'package:cloud_app/takingPhoto.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,14 +32,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +47,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ElevatedButton.icon(
                 label: const Text('雲を撮る'),
                 icon: const Icon(Icons.camera_alt),
-                onPressed: () {},
+                onPressed: () => {
+                  Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                      return TakingPhoto();
+                    }))
+                },
                 style: ElevatedButton.styleFrom(
                   fixedSize: const Size(240, 50)
                 ),
@@ -64,7 +63,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ElevatedButton.icon(
                 label: const Text('コレクション'),
                 icon: const Icon(Icons.insert_photo),
-                onPressed: () {},
+                onPressed: () => {
+                  Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                      return Collection();
+                    }))
+                },
                 style: ElevatedButton.styleFrom(
                   fixedSize: const Size(240, 50)
                 ),
