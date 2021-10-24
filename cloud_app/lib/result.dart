@@ -3,12 +3,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 class Result extends StatelessWidget {
   Result(this._image);
-  File? _image;
+  File _image;
 
   //path_providerでアプリ内のストレージ領域を確保
   static Future get localPath async {
@@ -26,18 +28,19 @@ class Result extends StatelessWidget {
   // 引数にはカメラ撮影時にreturnされるFileオブジェクトを持たせる
   static Future saveLocalImage(File image) async {
     final path = await localPath;
-    print(image.path);
     final imagePath = '$path/image.png';
     //SharePreferenceで画像のストレージパスを保存
     sharedPrefWrite(imagePath);
     File imageFile = File(imagePath);
-    // カメラで撮影した画像は撮影時用の一時的フォルダパスに保存されるため、
-    // その画像をドキュメントへ保存し直す
+    // カメラで撮影した画像は撮影時用の一時的フォルダパスに保存されるため、その画像をドキュメントへ保存し直す
     var savedFile = await imageFile.writeAsBytes(await image.readAsBytes());
-    // もしくは
-    // var savedFile = await image.copy(imagePath);
-    // でもOK
     return savedFile;
+  }
+
+  static Future shareImage(File image) async {
+    final Uint8List bytes = await image.readAsBytes();
+    await Share.file('タイトル', 'ファイル名', bytes, 'image/png',
+        text: '本文');
   }
 
   @override
@@ -56,13 +59,13 @@ class Result extends StatelessWidget {
                 Container(
                     margin: const EdgeInsets.all(20),
                     width: 300,
-                    child: Image.file(_image!)),
+                    child: Image.file(_image)),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
                         child: const Icon(Icons.save_alt),
-                        onPressed: () => {saveLocalImage(_image!)},
+                        onPressed: () => {shareImage(_image)},
                       ),
                       ElevatedButton(
                         child: const Icon(Icons.share),

@@ -14,10 +14,10 @@ class TakingPhoto extends StatefulWidget {
 }
 
 class _TakingPhoto extends State<TakingPhoto> {
-  File? _image;
+  File _image;
   final picker = ImagePicker();
-  DBHelper? dbHelper;
-  List<Photo>? images;
+  DBHelper dbHelper;
+  List<Photo> images;
 
   @override
   void initState() {
@@ -28,16 +28,16 @@ class _TakingPhoto extends State<TakingPhoto> {
   }
 
   refreshImages() {
-    dbHelper!.getPhotos().then((imgs) {
+    dbHelper.getPhotos().then((imgs) {
       setState(() {
-        images!.clear();
-        images!.addAll(imgs);
+        images.clear();
+        images.addAll(imgs);
       });
     });
   }
 
   _deleteDataInDB() {
-    dbHelper!.deleteDataInDB();
+    dbHelper.deleteDataInDB();
   }
 
   Future getImageFromCamera() async {
@@ -63,7 +63,7 @@ class _TakingPhoto extends State<TakingPhoto> {
   void saveImg(imgFile) async {
     String imgString = Utility.base64String(await imgFile.readAsBytes());
     Photo photo = Photo(0, imgString);
-    dbHelper!.save(photo);
+    dbHelper.save(photo);
   }
 
   @override
@@ -84,7 +84,7 @@ class _TakingPhoto extends State<TakingPhoto> {
                     Center(
                       child: _image == null
                       ? const Text("雲を撮ろう！")
-                      : Image.file(_image!)
+                      : Image.file(_image)
                     ),
                 ),
               ),

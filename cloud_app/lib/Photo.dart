@@ -1,6 +1,6 @@
 class Photo {
-  int? id;
-  String? photo_data;
+  int id;
+  String photo_data;
 
   Photo(this.id, this.photo_data);
 

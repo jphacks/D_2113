@@ -17,10 +17,10 @@ class Collection extends StatefulWidget {
 }
 
 class _CollectionState extends State<Collection> {
-  Future<File>? imageFile;
-  Image? image;
-  DBHelper? dbHelper;
-  List<Photo>? images;
+  Future<File> imageFile;
+  Image image;
+  DBHelper dbHelper;
+  List<Photo> images;
 
   @override
   void initState() {
@@ -31,14 +31,14 @@ class _CollectionState extends State<Collection> {
   }
 
   _deleteDataInDB() {
-    dbHelper!.deleteDataInDB();
+    dbHelper.deleteDataInDB();
   }
 
   refreshImages() {
-    dbHelper!.getPhotos().then((imgs) {
+    dbHelper.getPhotos().then((imgs) {
       setState(() {
-        images!.clear();
-        images!.addAll(imgs);
+        images.clear();
+        images.addAll(imgs);
       });
     });
   }
@@ -51,8 +51,8 @@ class _CollectionState extends State<Collection> {
         childAspectRatio: 1.0,
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
-        children: images!.map((photo) {
-          return Utility.imageFromBase64String(photo.photo_data!);
+        children: images.map((photo) {
+          return Utility.imageFromBase64String(photo.photo_data);
         }).toList(),
       ),
     );

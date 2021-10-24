@@ -6,13 +6,13 @@ import 'package:path_provider/path_provider.dart';
 import 'Photo.dart';
 
 class DBHelper {
-  static Database? _db;
+  static Database _db;
   Future <Database> get db async {
     if (_db != null){
-      return _db!;
+      return _db;
     }
     _db = await initDB();
-    return _db!;
+    return _db;
   }
 
   static const String ID = 'id';
@@ -46,7 +46,7 @@ class DBHelper {
     var dbClient = await db;
     List<Map<String, dynamic>> maps = await dbClient.query(TABLE, columns: [ID, DATA]);
     List<Photo> employees = [];
-    if (maps.length > 0) {
+    if (maps.isNotEmpty) {
       for (int _id = 0; _id < maps.length; _id++) {
         employees.add(Photo.fromMap(maps[_id]));
       }

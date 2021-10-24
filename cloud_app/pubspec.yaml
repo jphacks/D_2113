@@ -18,7 +18,8 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.15.0-246.0.dev <3.0.0"
+  # sdk: ">=2.15.0-246.0.dev <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -33,13 +34,16 @@ dependencies:
   # using camera ang getting photo in library
   image_picker: ^0.8.4+3
   # To save photo in local storage
-  path_provider: ^2.0.5
+  path_provider: ^1.1.0
   # To restore data temporarily
   shared_preferences: ^2.0.8
   # get below "." like .jpg
   path: ^1.8.0
   # using local database
   sqflite: ^2.0.0+4
+  # To make share button
+  share: ^2.0.4
+  esys_flutter_share: ^1.0.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
