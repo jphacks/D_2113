@@ -7,6 +7,11 @@ import 'Photo.dart';
 
 class DBHelper {
   static Database _db;
+  static const String ID = 'id';
+  static const String DATA = 'photo_data';
+  static const String TABLE = 'PhotosTable';
+  static const String DB_NAME = 'photos.db';
+
   Future <Database> get db async {
     if (_db != null){
       return _db;
@@ -14,11 +19,6 @@ class DBHelper {
     _db = await initDB();
     return _db;
   }
-
-  static const String ID = 'id';
-  static const String DATA = 'photo_data';
-  static const String TABLE = 'PhotosTable';
-  static const String DB_NAME = 'photos.db';
 
   initDB() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();

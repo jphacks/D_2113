@@ -52,6 +52,7 @@ class _CollectionState extends State<Collection> {
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
         children: images.map((photo) {
+          print('a');
           return Utility.imageFromBase64String(photo.photo_data);
         }).toList(),
       ),
@@ -62,10 +63,10 @@ class _CollectionState extends State<Collection> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('コレクション'),
+        title: const Text('コレクション'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             onPressed: () {
               _deleteDataInDB();
               refreshImages();

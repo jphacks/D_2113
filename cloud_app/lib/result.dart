@@ -39,8 +39,8 @@ class Result extends StatelessWidget {
 
   static Future shareImage(File image) async {
     final Uint8List bytes = await image.readAsBytes();
-    await Share.file('タイトル', 'ファイル名', bytes, 'image/png',
-        text: '本文');
+    final ByteData byteData = ByteData.view(bytes.buffer);
+    await Share.file('title', 'filename', byteData.buffer.asUint8List(), 'image/png');
   }
 
   @override
