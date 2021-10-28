@@ -7,6 +7,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+
   const MyApp({Key key}) : super(key: key);
 
   // This widget is the root of your application.
@@ -17,7 +18,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Cloud Recognition'),
+      home: Stack(
+        children: <Widget>[
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/bg1.jpg"),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const MyHomePage(title: 'Cloud Recognition'),
+        ]
+      )
     );
   }
 }
@@ -35,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -43,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
+              color: Colors.transparent,
               margin: const EdgeInsets.all(8),
               child: ElevatedButton.icon(
                 label: const Text('撮る'),
@@ -59,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Container(
+              color: Colors.transparent,
               margin: const EdgeInsets.all(8),
               child: ElevatedButton.icon(
                 label: const Text('見る'),

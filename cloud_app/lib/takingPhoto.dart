@@ -1,9 +1,7 @@
-import 'package:cloud_app/main.dart';
 import 'package:cloud_app/result.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 import 'Utility.dart';
@@ -75,6 +73,7 @@ class _TakingPhoto extends State<TakingPhoto> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: const Text('Cloud Recognition'),
         ),
@@ -84,6 +83,7 @@ class _TakingPhoto extends State<TakingPhoto> {
                 children: <Widget>[
               Center(
                 child: Container(
+                  color: Colors.transparent,
                   margin: const EdgeInsets.all(20),
                   width: 300,
                   child: Center(
@@ -110,6 +110,7 @@ class _TakingPhoto extends State<TakingPhoto> {
                 ],
               ),
               Container(
+              color: Colors.transparent,
                 margin: const EdgeInsets.all(20),
                 child: _image == null
                     ? const SizedBox.shrink()
@@ -127,6 +128,8 @@ class _TakingPhoto extends State<TakingPhoto> {
                             fixedSize: const Size(240, 50)),
                       ),
               ),
-            ])));
+            ])
+          )
+        );
   }
 }
