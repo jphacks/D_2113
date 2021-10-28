@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               margin: const EdgeInsets.all(8),
               child: ElevatedButton.icon(
-                label: const Text('雲を撮る'),
+                label: const Text('撮る'),
                 icon: const Icon(Icons.camera_alt),
                 onPressed: () => {
                   Navigator.of(context)
@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               margin: const EdgeInsets.all(8),
               child: ElevatedButton.icon(
-                label: const Text('コレクション'),
+                label: const Text('見る'),
                 icon: const Icon(Icons.insert_photo),
                 onPressed: () => {
                   Navigator.of(context)

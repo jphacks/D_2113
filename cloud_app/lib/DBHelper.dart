@@ -57,8 +57,9 @@ class DBHelper {
 
   Future<List<Photo>> getPhoto(id) async {
     var dbClient = await db;
-    List<Map<String, dynamic>> results =
-        await dbClient.query(TABLE, where: "_id=?", whereArgs: [id]);
+    List<Map<String, dynamic>> results = await dbClient.query(TABLE,
+        columns: [ID, DATA], where: "id=?", whereArgs: [id]);
+    print(results);
     List<Photo> photo = [];
     if (results.isNotEmpty) {
       photo.add(Photo.fromMap(results[0]));

@@ -11,6 +11,7 @@ import 'dart:typed_data';
 import 'Utility.dart';
 import 'DBHelper.dart';
 import 'Photo.dart';
+import 'FullScreenImage.dart';
 
 class Collection extends StatefulWidget {
   @override
@@ -44,20 +45,14 @@ class _CollectionState extends State<Collection> {
     });
   }
 
-  gridView() {
-    return Padding(
-      padding: EdgeInsets.all(5.0),
-      child: GridView.count(
-        crossAxisCount: 2,
-        childAspectRatio: 1.0,
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
-        children: images.map((photo) {
-          return Utility.imageFromBase64String(photo.photo_data);
-        }).toList(),
-      ),
-    );
+  getPhotData(int id) {
+    dbHelper.getPhoto(id).then((imgs) {
+      if (imgs.isNotEmpty) {
+        return imgs[0].photo_data;
+      }
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +74,35 @@ class _CollectionState extends State<Collection> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Flexible(
-              child: gridView(),
+              child:
+              GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.0,
+                  mainAxisSpacing: 4.0,
+                  crossAxisSpacing: 4.0,
+                ),
+                itemCount: images.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    child: Hero(
+                      tag: images[index].id,
+                      child: Container(
+                        decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                        child: Utility.imageFromBase64String(images[index].photo_data),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                          return FullScreenImage(image: images[index].photo_data, index: images[index].id);
+                          }
+                        ),
+                      );
+                    }
+                  );;
+                },
+              ),
             ),
           ],
         ),
