@@ -12,8 +12,8 @@ class DBHelper {
   static const String TABLE = 'PhotosTable';
   static const String DB_NAME = 'photos.db';
 
-  Future <Database> get db async {
-    if (_db != null){
+  Future<Database> get db async {
+    if (_db != null) {
       return _db;
     }
     _db = await initDB();
@@ -44,7 +44,8 @@ class DBHelper {
 
   Future<List<Photo>> getPhotos() async {
     var dbClient = await db;
-    List<Map<String, dynamic>> maps = await dbClient.query(TABLE, columns: [ID, DATA]);
+    List<Map<String, dynamic>> maps =
+        await dbClient.query(TABLE, columns: [ID, DATA]);
     List<Photo> employees = [];
     if (maps.isNotEmpty) {
       for (int _id = 0; _id < maps.length; _id++) {
@@ -52,6 +53,17 @@ class DBHelper {
       }
     }
     return employees;
+  }
+
+  Future<List<Photo>> getPhoto(id) async {
+    var dbClient = await db;
+    List<Map<String, dynamic>> results =
+        await dbClient.query(TABLE, where: "_id=?", whereArgs: [id]);
+    List<Photo> photo = [];
+    if (results.isNotEmpty) {
+      photo.add(Photo.fromMap(results[0]));
+    }
+    return photo;
   }
 
   Future close() async {

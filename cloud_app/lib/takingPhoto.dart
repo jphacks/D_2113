@@ -2,6 +2,8 @@ import 'package:cloud_app/main.dart';
 import 'package:cloud_app/result.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 import 'Utility.dart';
@@ -15,6 +17,7 @@ class TakingPhoto extends StatefulWidget {
 
 class _TakingPhoto extends State<TakingPhoto> {
   File _image;
+  int date;
   final picker = ImagePicker();
   DBHelper dbHelper;
   List<Photo> images;
@@ -23,6 +26,9 @@ class _TakingPhoto extends State<TakingPhoto> {
   void initState() {
     super.initState();
     images = [];
+    DateTime now = DateTime.now();
+    DateFormat outputFormat = DateFormat('yyyyMMddHm');
+    date = int.parse(outputFormat.format(now));
     dbHelper = DBHelper();
     refreshImages();
   }
@@ -60,9 +66,9 @@ class _TakingPhoto extends State<TakingPhoto> {
     });
   }
 
-  void saveImg(imgFile) async {
+  Future saveImg(imgFile) async {
     String imgString = Utility.base64String(await imgFile.readAsBytes());
-    Photo photo = Photo(0, imgString);
+    Photo photo = Photo(date, imgString);
     dbHelper.save(photo);
   }
 
@@ -80,12 +86,10 @@ class _TakingPhoto extends State<TakingPhoto> {
                 child: Container(
                   margin: const EdgeInsets.all(20),
                   width: 300,
-                  child:
-                    Center(
+                  child: Center(
                       child: _image == null
-                      ? const Text("雲を撮ろう！")
-                      : Image.file(_image)
-                    ),
+                          ? const Text("雲を撮ろう！")
+                          : Image.file(_image)),
                 ),
               ),
               Row(
@@ -108,20 +112,20 @@ class _TakingPhoto extends State<TakingPhoto> {
               Container(
                 margin: const EdgeInsets.all(20),
                 child: _image == null
-                  ? const SizedBox.shrink()
-                  : ElevatedButton.icon(
-                      label: const Text('結果を見る'),
-                      icon: const Icon(Icons.cloud),
-                      onPressed: () => {
-                        saveImg(_image),
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return Result(_image);
-                        }))
-                      },
-                      style:
-                          ElevatedButton.styleFrom(fixedSize: const Size(240, 50)),
-                    ),
+                    ? const SizedBox.shrink()
+                    : ElevatedButton.icon(
+                        label: const Text('結果を見る'),
+                        icon: const Icon(Icons.cloud),
+                        onPressed: () => {
+                          saveImg(_image),
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return Result(_image, date);
+                          }))
+                        },
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(240, 50)),
+                      ),
               ),
             ])));
   }

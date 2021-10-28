@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
+import 'package:share/share.dart';
 import 'dart:io';
 import 'dart:async';
 import 'dart:typed_data';
@@ -52,7 +53,6 @@ class _CollectionState extends State<Collection> {
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
         children: images.map((photo) {
-          print('a');
           return Utility.imageFromBase64String(photo.photo_data);
         }).toList(),
       ),

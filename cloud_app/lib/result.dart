@@ -3,14 +3,20 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+//import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:share/share.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'DBHelper.dart';
+import 'Utility.dart';
 
 class Result extends StatelessWidget {
-  Result(this._image);
+  Result(this._image, this.id);
   File _image;
+  int id;
+  DBHelper dbHelper = DBHelper();
 
   //path_providerでアプリ内のストレージ領域を確保
   static Future get localPath async {
@@ -37,10 +43,59 @@ class Result extends StatelessWidget {
     return savedFile;
   }
 
+/*
   static Future shareImage(File image) async {
     final Uint8List bytes = await image.readAsBytes();
     final ByteData byteData = ByteData.view(bytes.buffer);
-    await Share.file('title', 'filename', byteData.buffer.asUint8List(), 'image/png');
+    await Share.file(
+        'title', 'filename', byteData.buffer.asUint8List(), 'image/png');
+  }
+  */
+
+  getImages(date) {
+    dbHelper.getPhoto(date).then((img) {
+      img.map((photo) {
+        return Utility.imageFromBase64String(photo.photo_data);
+      });
+    });
+  }
+
+  Future<File> getApplicationDocumentsFile(
+      String text, List<int> imageData) async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    final exportFile = File('${directory.path}/$text.png');
+    if (!await exportFile.exists()) {
+      await exportFile.create(recursive: true);
+    }
+    final file = await exportFile.writeAsBytes(imageData);
+    return file;
+  }
+
+  void shareImageAndText(String text, File image) async {
+    //shareする際のテキスト
+    try {
+      //byte dataに
+      Uint8List uints = image.readAsBytesSync();
+      ByteData bytes = ByteData.view(uints.buffer);
+      final widgetImageData =
+          bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+      //App directoryファイルに保存
+      final applicationDocumentsFile =
+          await getApplicationDocumentsFile(text, widgetImageData);
+
+      final path = applicationDocumentsFile.path;
+      await Share.shareFiles([path]);
+      applicationDocumentsFile.delete();
+    } catch (error) {
+      print(error);
+    }
+  }
+  void saveImagetoLocal(File _image) async{
+    // 画像データの配列を取得
+      Uint8List _buffer = await _image.readAsBytes();
+      // アルバムに保存
+      final result = await ImageGallerySaver.saveImage(_buffer);
   }
 
   @override
@@ -53,23 +108,24 @@ class Result extends StatelessWidget {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  child: const Text('結果'),
-                ),
+                const Text('結果'),
                 Container(
                     margin: const EdgeInsets.all(20),
                     width: 300,
-                    child: Image.file(_image)),
+                    child: Image.memory(
+                      _image.readAsBytesSync(),
+                    ),
+                ),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
                         child: const Icon(Icons.save_alt),
-                        onPressed: () => {shareImage(_image)},
+                        onPressed: () => {saveImagetoLocal(_image)},
                       ),
                       ElevatedButton(
                         child: const Icon(Icons.share),
-                        onPressed: () => {},
+                        onPressed: () => {shareImageAndText('image', _image)},
                       ),
                     ]),
               ]),
